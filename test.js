@@ -48,6 +48,32 @@ describe('dollar function', () => {
     body.appendChild(element)
     assertQueries(document.body, '#dom', element)
   })
+
+  describe('finds element by compound selectors', () => {
+    it('finds by multiple classes', () => {
+      let element = document.createElement('div')
+      element.classList.add('one', 'two', 'three')
+      body.appendChild(element)
+
+      let notElement = document.createElement('div')
+      notElement.classList.add('one', 'two')
+      body.appendChild(notElement)
+
+      assertQueries(document.body, '.one.two.three', element)
+    })
+
+    it('finds by multiple selector types', () => {
+      let div = document.createElement('div')
+      div.classList.add('one')
+      body.appendChild(div)
+
+      let span = document.createElement('span')
+      span.classList.add('one')
+      body.appendChild(span)
+
+      assertQueries(document.body, 'div.one', div)
+    })
+  })
 })
 
 describe('selector parser', () => {
