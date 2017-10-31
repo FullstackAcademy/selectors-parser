@@ -12,7 +12,7 @@ combinator
 
 selector
   = selectors:( classSelector / idSelector / tagSelector )+
-  { return { selectors } }
+  { return { type: 'selector', selectors } }
 
 aCombinator
   = left:selector operator:operator right:selector
