@@ -20,6 +20,22 @@ function visitAST (element, ast) {
   switch (ast.type) {
     case 'selector':
       return ast.selectors.every(selector => visitSelector(element, selector))
+    case 'descendant':
+      const elementMatches = ast.right.selectors.every(selector =>
+        visitSelector(element, selector)
+      )
+      let parentMatches = false;
+      let parent = element.parentElement
+
+      while (!parentMatches && parent) {
+        parentMatches = ast.left.selectors.every(selector =>
+          visitSelector(parent, selector)
+        )
+        parent = parent.parentElement
+      }
+
+      return elementMatches && parentMatches
+
     default: return false
   }
 }

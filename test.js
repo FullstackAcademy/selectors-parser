@@ -49,6 +49,25 @@ describe('dollar function', () => {
     assertQueries(document.body, '#dom', element)
   })
 
+  describe('operators', () => {
+    it('matches according to the descendent operator', () => {
+      let parent = document.createElement('div')
+      parent.classList.add('parent')
+
+      let child = document.createElement('div')
+      child.classList.add('child')
+
+      let notChild = document.createElement('div')
+      notChild.classList.add('child')
+
+      parent.appendChild(child)
+      body.appendChild(parent)
+      body.appendChild(notChild)
+
+      assertQueries(document.body, '.parent .child', child)
+    })
+  })
+
   describe('finds element by compound selectors', () => {
     it('finds by multiple classes', () => {
       let element = document.createElement('div')
