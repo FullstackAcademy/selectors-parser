@@ -36,6 +36,9 @@ function visitAST (element, ast) {
 
       return elementMatches && parentMatches
 
+    case 'child': throw 'child operator unimplemented'
+    case 'adjacent': throw 'adjacent operator unimplemented'
+    case 'sibling': throw 'sibling operator unimplemented'
     default: return false
   }
 }

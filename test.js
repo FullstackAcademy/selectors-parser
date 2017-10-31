@@ -42,7 +42,7 @@ describe('dollar function', () => {
     assertQueries(document.body, 'div', element)
   })
 
-  it('finds elemnet by id', () => {
+  it('finds element by id', () => {
     let element = document.createElement('div')
     element.setAttribute('id', 'dom')
     body.appendChild(element)
@@ -65,6 +65,30 @@ describe('dollar function', () => {
       body.appendChild(notChild)
 
       assertQueries(document.body, '.parent .child', child)
+    })
+
+    it('matches according to the child operator')
+
+    it('matches according to the sibling operator')
+
+    it('matchs according to the adjacent operator')
+  })
+
+  describe('finds by group selector', () => {
+    it('finds elements once and only once', () => {
+      let one = document.createElement('div')
+      let two = document.createElement('div')
+      let three = document.createElement('div')
+
+      one.classList.add('one')
+      two.classList.add('two')
+      three.classList.add('three')
+
+      document.body.appendChild(one)
+      document.body.appendChild(two)
+      document.body.appendChild(three)
+
+      assertQueries(document.body, 'div, .one, .two', one, two, three)
     })
   })
 
