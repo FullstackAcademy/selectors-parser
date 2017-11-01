@@ -13,10 +13,13 @@ function visitAST (element, ast) {
 
     case 'class':
       return element.classList.contains(ast.name)
+
     case 'id':
       return element.getAttribute('id') === ast.id
+
     case 'tag':
       return element.tagName === ast.name.toUpperCase()
+
     case 'selector':
       return ast.selectors.every(selector => visitAST(element, selector))
 
@@ -86,9 +89,10 @@ function visitAST (element, ast) {
   }
 }
 
-function applyAST (element, ast) {
-  const document = element.ownerDocument
-  const walker = document.createTreeWalker(element)
+function dollar (root, selector) {
+  const ast = parser.parse(selector)
+  const document = root.ownerDocument
+  const walker = document.createTreeWalker(root)
   const matches = new Set
   let node
   while (node = walker.nextNode()) {
@@ -99,11 +103,6 @@ function applyAST (element, ast) {
     })
   }
   return [...matches]
-}
-
-function dollar (root, selector) {
-  const ast = parser.parse(selector)
-  return applyAST(root, ast)
 }
 
 module.exports = dollar
