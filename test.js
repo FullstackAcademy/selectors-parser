@@ -67,11 +67,55 @@ describe('dollar function', () => {
       assertQueries(document.body, '.parent .child', child)
     })
 
-    it('matches according to the child operator')
+    it('matches according to the child operator', () => {
+      document.body.innerHTML = `
+        <div id="parent">
+          <div id="child">
+            <div id="grandchild"></div>
+          </div>
+        </div>
+      `
 
-    it('matches according to the sibling operator')
+      assertQueries(
+        document.body,
+        'div > div',
+        document.getElementById('child'),
+        document.getElementById('grandchild')
+      )
+    })
 
-    it('matchs according to the adjacent operator')
+    it('matches according to the adjacent operator', () => {
+      document.body.innerHTML = `
+        <div id="one"></div>
+        <div id="two"></div>
+      `
+
+      assertQueries(
+        document.body,
+        'div + div',
+        document.getElementById('two')
+      )
+    })
+
+    it('matchs according to the sibling operator', () => {
+      document.body.innerHTML = `
+        <div id="parent-one">
+          <div class="sibling"></div>
+          <span class="span"></span>
+          <div id="one"></div>
+        </div>
+        <div id="parent-two">
+          <span></span>
+          <div id="two">
+        </div>
+      `
+
+      assertQueries(
+        document.body,
+        '.sibling ~ div',
+        document.getElementById('one')
+      )
+    })
   })
 
   describe('finds by group selector', () => {

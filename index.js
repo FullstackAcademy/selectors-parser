@@ -17,17 +17,21 @@ function visitSelector(element, selector) {
 }
 
 function visitAST (element, ast) {
+  let elementMatches
+  let parentMatches
+  let siblingMatches
+  let parent
   switch (ast.type) {
     case 'selector':
       return ast.selectors.every(selector => visitSelector(element, selector))
     case 'descendant':
-      const elementMatches = ast.right.selectors.every(selector =>
+      elementMatches = ast.right.selectors.every(selector =>
         visitSelector(element, selector)
       )
-      let parentMatches = false;
-      let parent = element.parentElement
+      parentMatches = false;
+      parent = element.parentElement
 
-      while (!parentMatches && parent) {
+      while (elementMatches && !parentMatches && parent) {
         parentMatches = ast.left.selectors.every(selector =>
           visitSelector(parent, selector)
         )
@@ -36,9 +40,52 @@ function visitAST (element, ast) {
 
       return elementMatches && parentMatches
 
-    case 'child': throw 'child operator unimplemented'
-    case 'adjacent': throw 'adjacent operator unimplemented'
-    case 'sibling': throw 'sibling operator unimplemented'
+    case 'child':
+      elementMatches = ast.right.selectors.every(selector =>
+        visitSelector(element, selector)
+      )
+      parentMatches = false;
+      parent = element.parentElement
+
+      if (elementMatches && parent) {
+        parentMatches = ast.left.selectors.every(selector =>
+          visitSelector(parent, selector)
+        )
+      }
+
+      return elementMatches && parentMatches
+
+    case 'adjacent':
+      elementMatches = ast.right.selectors.every(selector =>
+        visitSelector(element, selector)
+      )
+      let adjacentMatches = false;
+      adjacent = element.previousElementSibling
+
+      if (elementMatches && adjacent) {
+        adjacentMatches = ast.left.selectors.every(selector =>
+          visitSelector(adjacent, selector)
+        )
+      }
+
+      return elementMatches && adjacentMatches
+
+    case 'sibling':
+      elementMatches = ast.right.selectors.every(selector =>
+        visitSelector(element, selector)
+      )
+      let siblingMatches = false;
+      sibling = element.previousElementSibling
+
+      while (elementMatches && !siblingMatches && sibling) {
+        siblingMatches = ast.left.selectors.every(selector =>
+          visitSelector(sibling, selector)
+        )
+        sibling = sibling.previousElementSibling
+      }
+
+      return elementMatches && siblingMatches
+
     default: return false
   }
 }
